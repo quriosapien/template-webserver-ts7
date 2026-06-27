@@ -1,0 +1,50 @@
+{
+  "name": "template-ts7",
+  "version": "0.1.0",
+  "description": "Production-grade Node.js + TypeScript backend template (Express 5, layered architecture, manual DI).",
+  "type": "module",
+  "main": "dist/index.js",
+  "engines": {
+    "node": ">=26"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsup",
+    "start": "node dist/index.js",
+    "typecheck": "tsgo --noEmit",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "lint:ci": "biome ci .",
+    "format": "biome format --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "lefthook install"
+  },
+  "dependencies": {
+    "@elastic/elasticsearch": "^8.14.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^5.1.0",
+    "helmet": "^7.1.0",
+    "ioredis": "^5.4.1",
+    "kafkajs": "^2.2.4",
+    "mongodb": "^6.8.0",
+    "pg": "^8.12.0",
+    "pino": "^9.3.2",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.5.0",
+    "@types/pg": "^8.11.6",
+    "@typescript/native-preview": "latest",
+    "lefthook": "^1.7.0",
+    "pino-pretty": "^11.2.2",
+    "tsup": "^8.2.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.0.5"
+  }
+}
