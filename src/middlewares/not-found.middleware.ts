@@ -1,6 +1,6 @@
+import type { Request, Response } from 'express';
 import { HttpStatus } from '@/constants';
 import { failure } from '@/helpers/response.helper';
-import type { Request, Response } from 'express';
 
 /** Terminal handler for unmatched routes. */
 export function notFound(req: Request, res: Response): void {

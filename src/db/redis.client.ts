@@ -1,6 +1,6 @@
-import type { DataStoreClient } from '@/db/types';
 import type { Redis } from 'ioredis';
 import type { Logger } from 'pino';
+import type { DataStoreClient } from '@/db/types';
 
 /**
  * Redis client — STUB. Exposes idiomatic get/set/del helpers. Real connection
