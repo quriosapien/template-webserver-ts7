@@ -1,14 +1,14 @@
 import type { Logger } from 'pino';
 import { config } from '@/config';
+import { HealthController } from '@/controllers/health.controller';
 import { ElasticsearchClient } from '@/db/elasticsearch.client';
 import { KafkaClient } from '@/db/kafka.client';
 import { MongoDbClient } from '@/db/mongo.client';
 import { PostgresClient } from '@/db/postgres.client';
 import { RedisClient } from '@/db/redis.client';
 import type { DataStoreClient } from '@/db/types';
-import { HealthController } from '@/modules/health/health.controller';
-import { HealthRepository } from '@/modules/health/health.repository';
-import { HealthService } from '@/modules/health/health.service';
+import { HealthRepository } from '@/repositories/health.repository';
+import { HealthService } from '@/services/health.service';
 import { createLogger } from '@/utils/logger.util';
 
 /**

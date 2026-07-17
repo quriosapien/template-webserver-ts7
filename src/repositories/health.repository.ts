@@ -1,5 +1,5 @@
 import type { DataStoreClient } from '@/db/types';
-import type { DependencyCheck, IHealthRepository } from '@/modules/health/health.types';
+import type { DependencyCheck, IHealthRepository } from '@/types/health.types';
 
 /**
  * Reports the health of each registered datastore. STUB: currently reports

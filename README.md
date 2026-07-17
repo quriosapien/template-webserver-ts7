@@ -69,17 +69,23 @@ src/
 ├── helpers/            # response envelopes (*.helper.ts)
 ├── middlewares/        # request-context, error-handler, not-found (*.middleware.ts)
 ├── db/                 # datastore clients: postgres / mongo / redis / kafka / elasticsearch (STUBS)
-├── routes/             # mounts module routers under /api
-└── modules/
-    └── health/         # reference feature: *.route / *.controller / *.service / *.repository / *.types / *.test
+├── controllers/        # HTTP <-> service translation (*.controller.ts)
+├── services/           # business logic + colocated unit tests (*.service.ts, *.service.test.ts)
+├── repositories/       # data access (*.repository.ts)
+├── routes/             # index.ts mounts routers under /api; per-feature routers (*.route.ts)
+└── types/              # ambient augmentation (express.d.ts) + per-feature DTOs/contracts (*.types.ts)
 ```
+
+Layers are grouped by role: the reference `health` feature is spread across
+`controllers/health.controller.ts`, `services/health.service.ts`,
+`repositories/health.repository.ts`, `routes/health.route.ts`, and `types/health.types.ts`.
 
 ### Layering & dependency injection
 
 Each layer depends on an **interface** and receives the concrete instance through its **constructor**.
 `src/container.ts` is the single composition root that wires everything top-down
 (`db clients → repository → service → controller`). Because no layer constructs its own dependencies,
-every unit is testable in isolation — see [`health.service.test.ts`](src/modules/health/health.service.test.ts),
+every unit is testable in isolation — see [`health.service.test.ts`](src/services/health.service.test.ts),
 which exercises the service against a fully mocked repository.
 
 ### File suffix convention
