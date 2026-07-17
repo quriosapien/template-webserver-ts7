@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { HttpStatus } from '@/constants';
 import { success } from '@/helpers/response.helper';
-import type { IHealthService } from '@/modules/health/health.types';
+import type { IHealthService } from '@/types/health.types';
 
 /**
  * Translates HTTP <-> service. Holds no business logic; depends on the service

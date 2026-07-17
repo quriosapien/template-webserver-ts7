@@ -1,8 +1,4 @@
-import type {
-  HealthStatus,
-  IHealthRepository,
-  IHealthService,
-} from '@/modules/health/health.types';
+import type { HealthStatus, IHealthRepository, IHealthService } from '@/types/health.types';
 
 /**
  * Business logic for health reporting. Depends only on the repository

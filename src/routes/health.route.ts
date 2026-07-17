@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import type { HealthController } from '@/modules/health/health.controller';
+import type { HealthController } from '@/controllers/health.controller';
 
 /** Builds the health router from an injected controller instance. */
 export function createHealthRouter(controller: HealthController): Router {

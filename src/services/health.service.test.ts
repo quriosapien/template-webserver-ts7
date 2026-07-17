@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { HealthService } from '@/modules/health/health.service';
-import type { DependencyCheck, IHealthRepository } from '@/modules/health/health.types';
+import { HealthService } from '@/services/health.service';
+import type { DependencyCheck, IHealthRepository } from '@/types/health.types';
 
 /**
  * Demonstrates isolated unit testing: the service is exercised against a fully
