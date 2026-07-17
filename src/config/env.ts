@@ -27,17 +27,17 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(3000),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
-  CLUSTER_ENABLED: booleanString.default('false'),
+  CLUSTER_ENABLED: booleanString.default(false),
 
   // PostgreSQL
-  POSTGRES_URL: z.string().url(),
+  POSTGRES_URL: z.url(),
 
   // MongoDB
-  MONGO_URL: z.string().url(),
+  MONGO_URL: z.url(),
   MONGO_DB: z.string().min(1),
 
   // Redis
-  REDIS_URL: z.string().url(),
+  REDIS_URL: z.url(),
 
   // Kafka
   KAFKA_BROKERS: z
@@ -47,7 +47,7 @@ const envSchema = z.object({
   KAFKA_CLIENT_ID: z.string().min(1),
 
   // Elasticsearch
-  ELASTICSEARCH_NODE: z.string().url(),
+  ELASTICSEARCH_NODE: z.url(),
 });
 
 const parsed = envSchema.safeParse(process.env);

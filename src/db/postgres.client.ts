@@ -1,6 +1,6 @@
-import type { DataStoreClient } from '@/db/types';
 import type { Pool, QueryResultRow } from 'pg';
 import type { Logger } from 'pino';
+import type { DataStoreClient } from '@/db/types';
 
 /**
  * PostgreSQL client — STUB. Holds the pool handle and exposes the idiomatic

@@ -1,3 +1,4 @@
+import type { Logger } from 'pino';
 import { config } from '@/config';
 import { ElasticsearchClient } from '@/db/elasticsearch.client';
 import { KafkaClient } from '@/db/kafka.client';
@@ -9,7 +10,6 @@ import { HealthController } from '@/modules/health/health.controller';
 import { HealthRepository } from '@/modules/health/health.repository';
 import { HealthService } from '@/modules/health/health.service';
 import { createLogger } from '@/utils/logger.util';
-import type { Logger } from 'pino';
 
 /**
  * The fully-wired application graph. This is the ONLY place concrete instances

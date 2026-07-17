@@ -1,6 +1,6 @@
-import type { DataStoreClient } from '@/db/types';
 import type { Consumer, Kafka, Producer } from 'kafkajs';
 import type { Logger } from 'pino';
+import type { DataStoreClient } from '@/db/types';
 
 export type MessageHandler = (payload: { topic: string; value: string }) => Promise<void>;
 

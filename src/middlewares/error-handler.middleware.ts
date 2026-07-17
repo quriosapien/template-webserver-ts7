@@ -1,7 +1,7 @@
+import type { NextFunction, Request, Response } from 'express';
 import { HttpStatus } from '@/constants';
 import { failure } from '@/helpers/response.helper';
 import { AppError } from '@/utils/app-error.util';
-import type { NextFunction, Request, Response } from 'express';
 
 /**
  * Central error handler. Express 5 forwards rejected async handlers here
