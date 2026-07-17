@@ -1,6 +1,6 @@
-import type { DataStoreClient } from '@/db/types';
 import type { Document, MongoClient, OptionalId, WithId } from 'mongodb';
 import type { Logger } from 'pino';
+import type { DataStoreClient } from '@/db/types';
 
 /**
  * MongoDB client — STUB. Exposes idiomatic find/insert/update/delete helpers.
