@@ -1,5 +1,5 @@
-import { config } from '@/config';
 import { type Logger, pino } from 'pino';
+import { config } from '@/config';
 
 /**
  * Root application logger. In non-production stages it pretty-prints; in

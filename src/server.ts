@@ -1,11 +1,11 @@
+import cors from 'cors';
+import express, { type Express } from 'express';
+import helmet from 'helmet';
 import type { Container } from '@/container';
 import { errorHandler } from '@/middlewares/error-handler.middleware';
 import { notFound } from '@/middlewares/not-found.middleware';
 import { requestContext } from '@/middlewares/request-context.middleware';
 import { registerRoutes } from '@/routes';
-import cors from 'cors';
-import express, { type Express } from 'express';
-import helmet from 'helmet';
 
 /** Build the Express 5 application from a wired container. */
 export function createServer(container: Container): Express {

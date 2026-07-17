@@ -1,6 +1,6 @@
-import type { DataStoreClient } from '@/db/types';
 import type { Client } from '@elastic/elasticsearch';
 import type { Logger } from 'pino';
+import type { DataStoreClient } from '@/db/types';
 
 /**
  * Elasticsearch client — STUB. Exposes idiomatic index/search helpers. Real
