@@ -12,7 +12,9 @@ logs/
 *.log
 npm-debug.log*
 
-# Environment files — keep only .env.example committed
+# Environment files — keep only .env.example committed.
+# staging/production normally use orchestrator-injected env, not files; the
+# entries below are a safety net in case a file is ever created locally.
 .env
 .env.local
 .env.development
