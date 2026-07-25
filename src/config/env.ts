@@ -1,28 +1,31 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { config as loadDotenv } from 'dotenv';
 import { z } from 'zod';
 
 /**
  * Resolve which `.env.<stage>` file to load. The stage is driven by APP_ENV so
  * the same build can run against local / development / test / staging /
  * production simply by changing one variable.
+ *
+ * Loading uses Node's native env-file parser (`process.loadEnvFile`), so there
+ * is no `dotenv` dependency.
  */
 const APP_ENV = process.env.APP_ENV ?? 'local';
 const envFile = resolve(process.cwd(), `.env.${APP_ENV}`);
 
 if (existsSync(envFile)) {
-  loadDotenv({ path: envFile });
-} else {
-  // Fall back to process environment only (e.g. variables injected by the
-  // orchestrator in production). Validation below still guards correctness.
-  loadDotenv();
+  process.loadEnvFile(envFile);
 }
+// else: no file (staging/production) — rely on orchestrator-injected process.env.
+// Zod validation below still guards correctness.
 
 const booleanString = z.enum(['true', 'false']).transform((value) => value === 'true');
 
 /** Single source of truth for every environment variable the app consumes. */
 const envSchema = z.object({
+  // Two independent axes, intentionally not derived from each other:
+  //   APP_ENV  = which values/secrets to source (e.g. test → test.template.website).
+  //   NODE_ENV = build/compilation mode; test, staging and production all build as `production`.
   APP_ENV: z.enum(['local', 'development', 'test', 'staging', 'production']).default('local'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(3000),
