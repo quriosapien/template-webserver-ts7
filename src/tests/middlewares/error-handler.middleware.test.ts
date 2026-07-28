@@ -61,6 +61,27 @@ describe('errorHandler', () => {
     });
   });
 
+  it('honors the statusCode of exposed operational errors that are not AppError instances (e.g. body-parser SyntaxError)', () => {
+    const logger = createFakeLogger();
+    const req = createMockRequest({ log: logger });
+    const res = createMockResponse();
+    const bodyParserError = Object.assign(new SyntaxError('Unexpected token in JSON'), {
+      statusCode: HttpStatus.BAD_REQUEST,
+      status: HttpStatus.BAD_REQUEST,
+      expose: true,
+    });
+
+    errorHandler(bodyParserError, req, res, () => {});
+
+    expect(res.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
+    expect(res.json).toHaveBeenCalledWith({
+      success: false,
+      error: { message: 'Unexpected token in JSON' },
+    });
+    expect(logger.warn).toHaveBeenCalledOnce();
+    expect(logger.error).not.toHaveBeenCalled();
+  });
+
   it('responds 500 with a generic message and logs via error for unknown thrown values', () => {
     const logger = createFakeLogger();
     const req = createMockRequest({ log: logger });
