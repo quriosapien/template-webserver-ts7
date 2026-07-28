@@ -1,7 +1,10 @@
 /** Health of a single downstream dependency (datastore, etc.). */
+export type DependencyHealth = 'healthy' | 'unhealthy' | 'unknown';
+
 export interface DependencyCheck {
   name: string;
-  healthy: boolean;
+  status: DependencyHealth;
+  message?: string;
 }
 
 /** Aggregate health payload returned by GET /api/health. */

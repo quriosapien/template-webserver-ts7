@@ -13,8 +13,8 @@ describe('HealthService', () => {
 
   it('reports "ok" when every dependency is healthy', async () => {
     const repo = makeRepo([
-      { name: 'postgres', healthy: true },
-      { name: 'redis', healthy: true },
+      { name: 'postgres', status: 'healthy' },
+      { name: 'redis', status: 'healthy' },
     ]);
     const service = new HealthService(repo);
 
@@ -27,14 +27,26 @@ describe('HealthService', () => {
 
   it('reports "degraded" when any dependency is unhealthy', async () => {
     const repo = makeRepo([
-      { name: 'postgres', healthy: true },
-      { name: 'kafka', healthy: false },
+      { name: 'postgres', status: 'healthy' },
+      { name: 'kafka', status: 'unhealthy' },
     ]);
     const service = new HealthService(repo);
 
     const health = await service.getHealth();
 
     expect(health.status).toBe('degraded');
+  });
+
+  it('reports "ok" when dependencies are "unknown" rather than degrading on unimplemented checks', async () => {
+    const repo = makeRepo([
+      { name: 'postgres', status: 'unknown' },
+      { name: 'redis', status: 'unknown' },
+    ]);
+    const service = new HealthService(repo);
+
+    const health = await service.getHealth();
+
+    expect(health.status).toBe('ok');
   });
 
   it('includes uptime and an ISO timestamp', async () => {

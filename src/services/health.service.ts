@@ -9,10 +9,10 @@ export class HealthService implements IHealthService {
 
   async getHealth(): Promise<HealthStatus> {
     const checks = await this.repository.getDependencyStatuses();
-    const allHealthy = checks.every((check) => check.healthy);
+    const hasUnhealthy = checks.some((check) => check.status === 'unhealthy');
 
     return {
-      status: allHealthy ? 'ok' : 'degraded',
+      status: hasUnhealthy ? 'degraded' : 'ok',
       uptimeSeconds: Math.floor(process.uptime()),
       timestamp: new Date().toISOString(),
       checks,
