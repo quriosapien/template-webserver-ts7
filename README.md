@@ -67,7 +67,7 @@ src/
 ├── constants/          # shared constants (*.constant.ts)
 ├── utils/              # logger, AppError (*.util.ts)
 ├── helpers/            # response envelopes (*.helper.ts)
-├── middlewares/        # request-context, error-handler, not-found (*.middleware.ts)
+├── middlewares/        # request-context, rate-limit, validate, error-handler, not-found (*.middleware.ts)
 ├── db/                 # datastore clients: postgres / mongo / redis / kafka / elasticsearch (STUBS)
 ├── controllers/        # HTTP <-> service translation (*.controller.ts)
 ├── services/           # business logic + colocated unit tests (*.service.ts, *.service.test.ts)
@@ -85,8 +85,9 @@ Layers are grouped by role: the reference `health` feature is spread across
 Each layer depends on an **interface** and receives the concrete instance through its **constructor**.
 `src/container.ts` is the single composition root that wires everything top-down
 (`db clients → repository → service → controller`). Because no layer constructs its own dependencies,
-every unit is testable in isolation — see [`health.service.test.ts`](src/services/health.service.test.ts),
-which exercises the service against a fully mocked repository.
+every unit is testable in isolation — see
+[`health.service.test.ts`](src/tests/services/health.service.test.ts), which exercises the service
+against a fully mocked repository.
 
 ### File suffix convention
 
@@ -114,6 +115,16 @@ A single Node process uses one core. To use them all:
 ```bash
 CLUSTER_ENABLED=true npm start
 ```
+
+## API documentation
+
+The API surface is documented in [`docs/openapi.yaml`](docs/openapi.yaml) (OpenAPI 3.1, hand-written
+and kept in sync manually). Preview it with `npx @redocly/cli preview-docs docs/openapi.yaml`.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the local dev loop and the checks to run before pushing.
+See [CLAUDE.md](CLAUDE.md) for the conventions this repo follows (layering, file suffixes, testing).
 
 ## Code style consistency
 

@@ -27,7 +27,25 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
       include: ['src/**/*.ts'],
-      exclude: ['src/**/*.test.ts', 'src/**/*.types.ts', 'src/tests/support/**'],
+      // index.ts/cluster.ts are process-bootstrap glue (app.listen, SIGTERM
+      // handling, cluster.fork) — meaningfully testing them needs real
+      // process spawning (E2E), not unit tests.
+      exclude: [
+        'src/**/*.test.ts',
+        'src/**/*.types.ts',
+        'src/tests/support/**',
+        'src/index.ts',
+        'src/cluster.ts',
+      ],
+      // Ratchet, not aspirational: set a few points below the observed
+      // baseline (98.34/89.79/98.46/98.87 at the time this was added) so CI
+      // catches regressions without being a moving target for every PR.
+      thresholds: {
+        statements: 95,
+        branches: 85,
+        functions: 95,
+        lines: 95,
+      },
     },
   },
 });
