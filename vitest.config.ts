@@ -19,6 +19,9 @@ export default defineConfig({
       KAFKA_BROKERS: 'localhost:9092',
       KAFKA_CLIENT_ID: 'template-ts7-test',
       ELASTICSEARCH_NODE: 'http://localhost:9200',
+      // Low ceiling so integration tests can trigger a 429 deterministically
+      // in a handful of requests instead of the production default (100).
+      RATE_LIMIT_MAX: '3',
     },
     coverage: {
       provider: 'v8',

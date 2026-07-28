@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildContainer } from '@/container';
+import { EchoController } from '@/controllers/echo.controller';
 import { HealthController } from '@/controllers/health.controller';
 
 describe('buildContainer', () => {
@@ -19,6 +20,12 @@ describe('buildContainer', () => {
     const container = buildContainer();
 
     expect(container.controllers.health).toBeInstanceOf(HealthController);
+  });
+
+  it('wires the echo controller', () => {
+    const container = buildContainer();
+
+    expect(container.controllers.echo).toBeInstanceOf(EchoController);
   });
 
   it('exposes a logger', () => {

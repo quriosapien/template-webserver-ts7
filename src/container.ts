@@ -1,5 +1,6 @@
 import type { Logger } from 'pino';
 import { config } from '@/config';
+import { EchoController } from '@/controllers/echo.controller';
 import { HealthController } from '@/controllers/health.controller';
 import { ElasticsearchClient } from '@/db/elasticsearch.client';
 import { KafkaClient } from '@/db/kafka.client';
@@ -21,6 +22,7 @@ export interface Container {
   clients: DataStoreClient[];
   controllers: {
     health: HealthController;
+    echo: EchoController;
   };
 }
 
@@ -41,11 +43,15 @@ export function buildContainer(): Container {
   const healthService = new HealthService(healthRepository);
   const healthController = new HealthController(healthService);
 
+  // ── Echo module (validation-pattern demo only, see echo.controller.ts) ────
+  const echoController = new EchoController();
+
   return {
     logger,
     clients,
     controllers: {
       health: healthController,
+      echo: echoController,
     },
   };
 }
