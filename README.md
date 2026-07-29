@@ -119,7 +119,12 @@ CLUSTER_ENABLED=true npm start
 ## API documentation
 
 The API surface is documented in [`docs/openapi.yaml`](docs/openapi.yaml) (OpenAPI 3.1, hand-written
-and kept in sync manually). Preview it with `npx @redocly/cli preview-docs docs/openapi.yaml`.
+and kept in sync manually). Preview it with:
+
+```bash
+npx @redocly/cli build-docs docs/openapi.yaml -o docs/redoc-static.html
+open docs/redoc-static.html
+```
 
 ## Contributing
 

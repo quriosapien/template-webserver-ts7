@@ -51,5 +51,6 @@ No dependency is installed for this (kept out of scope to avoid a lint-only devD
 
 ```bash
 npx @redocly/cli lint docs/openapi.yaml
-npx @redocly/cli preview-docs docs/openapi.yaml
+npx @redocly/cli build-docs docs/openapi.yaml -o docs/redoc-static.html
+open docs/redoc-static.html
 ```

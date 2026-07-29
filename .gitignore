@@ -3,6 +3,7 @@ node_modules/
 
 # Build output
 dist/
+docs/redoc-static.html
 
 # Test/coverage output
 coverage/
