@@ -1,4 +1,4 @@
-# template-ts7
+# template-webserver-ts7
 
 Production-grade **Node.js 26 + TypeScript** backend template: Express 5, a strict
 `routes → controller → service → repository` layering, manual dependency injection, fast modern
