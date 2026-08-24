@@ -8,7 +8,7 @@ tooling, per-stage environment config, and stubbed clients for five datastores.
 
 | Concern        | Tool                                          | Why |
 | -------------- | --------------------------------------------- | --- |
-| Type-checking  | **tsgo** (`@typescript/native-preview`)       | The Go-based TypeScript compiler — very fast, `--noEmit` only. |
+| Type-checking  | **tsc** (`typescript` 7)                       | The Go-based TypeScript compiler, now shipped in TypeScript 7 itself — very fast, `--noEmit` only. |
 | Lint + format  | **Biome** (single Rust binary)                | Replaces ESLint **and** Prettier — one tool, one config. |
 | Dev server     | **tsx watch** (esbuild)                        | Runs TS directly, restarts on change. |
 | Prod build     | **tsup** (esbuild)                             | Bundles `src/` → a single `dist/index.js`. |
@@ -35,7 +35,7 @@ npm run dev             # http://localhost:3000/api/health
 | `npm run dev`       | Watch-mode dev server (tsx). |
 | `npm run build`     | Bundle to `dist/` (tsup). |
 | `npm start`         | Run the built server (`node dist/index.js`). |
-| `npm run typecheck` | Type-check with tsgo. |
+| `npm run typecheck` | Type-check with tsc. |
 | `npm run lint`      | Biome check (lint + format + import order). |
 | `npm run lint:fix`  | Biome check with autofix. |
 | `npm run format`    | Biome format only. |

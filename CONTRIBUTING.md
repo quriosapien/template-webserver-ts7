@@ -25,7 +25,7 @@ Run the same checks CI runs, in order:
 
 ```bash
 npm run lint         # Biome: lint + format + import order
-npm run typecheck    # tsgo --noEmit
+npm run typecheck    # tsc --noEmit
 npm run build        # tsup, catches bundling issues typecheck alone won't
 npm run test:coverage
 ```
