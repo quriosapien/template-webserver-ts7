@@ -7,6 +7,7 @@ docs/redoc-static.html
 
 # Test/coverage output
 coverage/
+.vitest/
 
 # Logs
 logs/
