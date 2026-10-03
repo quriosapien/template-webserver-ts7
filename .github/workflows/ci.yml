@@ -19,14 +19,24 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      # setup-node's npm cache runs `npm config get cache` inside the repo, which
+      # devEngines rejects under Node 26's bundled npm 11. So: Node first, then
+      # npm 12, then a second setup-node pass that only enables the cache.
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
-          cache: 'npm'
+          package-manager-cache: false
 
       - name: Install npm 12
         run: npm install -g npm@12
+        working-directory: ${{ runner.temp }}
+
+      - name: Cache npm
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
