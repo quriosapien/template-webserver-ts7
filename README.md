@@ -10,8 +10,8 @@ tooling, per-stage environment config, and stubbed clients for five datastores.
 | -------------- | --------------------------------------------- | --- |
 | Type-checking  | **tsc** (`typescript` 7)                       | The Go-based TypeScript compiler, now shipped in TypeScript 7 itself — very fast, `--noEmit` only. |
 | Lint + format  | **Biome** (single Rust binary)                | Replaces ESLint **and** Prettier — one tool, one config. |
-| Dev server     | **tsx watch** (esbuild)                        | Runs TS directly, restarts on change. |
-| Prod build     | **tsup** (esbuild)                             | Bundles `src/` → a single `dist/index.js`. |
+| Dev server     | **tsdown --watch** (Rolldown)                  | Rebuilds on change and restarts `node dist/index.js`. |
+| Prod build     | **tsdown** (Rolldown, Rust)                    | Bundles `src/` → a single `dist/index.js`. |
 | Tests          | **Vitest**                                     | Fast, great mocking for isolated unit tests. |
 | Git hooks      | **lefthook** (Go binary)                       | Pre-commit Biome run so style never drifts across PRs. |
 
@@ -33,8 +33,8 @@ npm run dev             # http://localhost:3000/api/health
 
 | Script              | Description |
 | ------------------- | ----------- |
-| `npm run dev`       | Watch-mode dev server (tsx). |
-| `npm run build`     | Bundle to `dist/` (tsup). |
+| `npm run dev`       | Watch-mode dev server (tsdown). |
+| `npm run build`     | Bundle to `dist/` (tsdown). |
 | `npm start`         | Run the built server (`node dist/index.js`). |
 | `npm run typecheck` | Type-check with tsc. |
 | `npm run lint`      | Biome check (lint + format + import order). |
