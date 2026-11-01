@@ -12,7 +12,7 @@ context — don't copy its shape when adding a real feature; copy `health`'s.
 ## Layering rule
 
 `routes → controller → service → repository → db client`. Each layer depends on an **interface**
-and receives its concrete dependency through the **constructor**. `src/container.ts` is the *only*
+and receives its concrete dependency through the **constructor**. `src/container.ts` is the _only_
 place `new` is called to wire the graph — no layer constructs its own dependencies. When adding a
 feature, wire it into `container.ts` and `src/routes/index.ts` the same way `health`/`echo` are
 wired.
@@ -21,18 +21,18 @@ wired.
 
 When adding a file, use the suffix matching its role — don't invent new ones:
 
-| Suffix | Role |
-| --- | --- |
-| `*.route.ts` | Express router factory |
-| `*.controller.ts` | HTTP <-> service translation, no business logic |
-| `*.service.ts` | Business logic, depends on repository interfaces |
-| `*.repository.ts` | Data access |
-| `*.types.ts` | DTOs, Zod schemas, interfaces |
-| `*.middleware.ts` | Express middleware |
-| `*.constant.ts` | Shared constants |
-| `*.util.ts` | Stateless helpers |
-| `*.helper.ts` | Response envelopes and similar |
-| `*.client.ts` | Datastore client wrapper |
+| Suffix            | Role                                             |
+| ----------------- | ------------------------------------------------ |
+| `*.route.ts`      | Express router factory                           |
+| `*.controller.ts` | HTTP <-> service translation, no business logic  |
+| `*.service.ts`    | Business logic, depends on repository interfaces |
+| `*.repository.ts` | Data access                                      |
+| `*.types.ts`      | DTOs, Zod schemas, interfaces                    |
+| `*.middleware.ts` | Express middleware                               |
+| `*.constant.ts`   | Shared constants                                 |
+| `*.util.ts`       | Stateless helpers                                |
+| `*.helper.ts`     | Response envelopes and similar                   |
+| `*.client.ts`     | Datastore client wrapper                         |
 
 ## Config rule
 
