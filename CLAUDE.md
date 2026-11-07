@@ -37,6 +37,7 @@ When adding a file, use the suffix matching its role — don't invent new ones:
 ## Config rule
 
 Never read `process.env` outside `src/config/env.ts`. Adding a new env var requires all of:
+
 1. A Zod schema entry in `src/config/env.ts`.
 2. An entry in `.env.example` with a comment.
 3. If the var is consumed by code exercised in tests, an entry in `vitest.config.ts`'s `test.env`.
@@ -44,6 +45,7 @@ Never read `process.env` outside `src/config/env.ts`. Adding a new env var requi
 ## Testing rule
 
 Two distinct layers, don't blur them:
+
 - **Unit tests** (`src/tests/**`, mirroring `src/`): hand-rolled `vi.fn()` mocks
   (`src/tests/support/express-mocks.ts`, `src/tests/support/fake-logger.ts`) isolate one layer at a
   time. Use these for business logic, branching, and error paths — they're fast and precise.
