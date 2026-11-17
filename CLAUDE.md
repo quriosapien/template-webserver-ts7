@@ -7,7 +7,9 @@ Guidance for Claude Code (or any future contributor) working in this repo.
 A **scaffold**, not a product. `health` (`GET /api/health`) is the only real reference feature,
 demonstrating the full `controller → service → repository` layering. `echo` (`POST /api/echo`) is a
 second, deliberately thin endpoint that exists only to demonstrate `validate.middleware.ts` in
-context — don't copy its shape when adding a real feature; copy `health`'s.
+context — don't copy its shape when adding a real feature; copy `health`'s. `demo` (`/api/demo/*`)
+shows process-local in-memory cache + named locks under `src/infra/` (default cache TTL 5 minutes);
+also not a product-feature template.
 
 ## Layering rule
 

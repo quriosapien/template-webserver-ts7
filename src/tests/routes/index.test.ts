@@ -1,10 +1,14 @@
 import type { Express, Router } from 'express';
 import { describe, expect, it, vi } from 'vitest';
 import type { Container } from '@/container';
+import { DemoController } from '@/controllers/demo.controller';
 import { EchoController } from '@/controllers/echo.controller';
 import { HealthController } from '@/controllers/health.controller';
+import { MemoryCache } from '@/infra/memory-cache';
+import { MemoryLock } from '@/infra/memory-lock';
 import { registerRoutes } from '@/routes';
 import { createFakeLogger } from '@/tests/support/fake-logger';
+import type { IDemoService } from '@/types/demo.types';
 import type { IHealthService } from '@/types/health.types';
 
 /**
@@ -18,9 +22,12 @@ describe('registerRoutes', () => {
   const buildTestContainer = (): Container => ({
     logger: createFakeLogger(),
     clients: [],
+    cache: new MemoryCache(),
+    locks: new MemoryLock(),
     controllers: {
       health: new HealthController({} as IHealthService),
       echo: new EchoController(),
+      demo: new DemoController({} as IDemoService),
     },
   });
 
@@ -68,5 +75,17 @@ describe('registerRoutes', () => {
     const router = findMountedRouter(app, '/api/echo');
     const stack = router.stack[0]?.route?.stack;
     expect(stack?.[stack.length - 1]?.handle).toBe(container.controllers.echo.echo);
+  });
+
+  it('mounts the demo router under /api/demo', () => {
+    const container = buildTestContainer();
+    const app = { use: vi.fn() } as unknown as Express;
+
+    registerRoutes(app, container);
+
+    expect(app.use).toHaveBeenCalledWith('/api/demo', expect.anything());
+    const router = findMountedRouter(app, '/api/demo');
+    const putStack = router.stack[0]?.route?.stack;
+    expect(putStack?.[putStack.length - 1]?.handle).toBe(container.controllers.demo.setCache);
   });
 });

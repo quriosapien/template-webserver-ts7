@@ -66,6 +66,7 @@ src/
 ├── container.ts        # composition root — the ONLY place dependencies are constructed
 ├── config/             # per-stage, Zod-validated, typed config
 ├── constants/          # shared constants (*.constant.ts)
+├── infra/              # process-local cache + named locks (single-process demos / small apps)
 ├── utils/              # logger, AppError (*.util.ts)
 ├── helpers/            # response envelopes (*.helper.ts)
 ├── middlewares/        # request-context, rate-limit, validate, error-handler, not-found (*.middleware.ts)
@@ -80,6 +81,10 @@ src/
 Layers are grouped by role: the reference `health` feature is spread across
 `controllers/health.controller.ts`, `services/health.service.ts`,
 `repositories/health.repository.ts`, `routes/health.route.ts`, and `types/health.types.ts`.
+
+`/api/demo/*` exercises the in-memory cache (default TTL **5 minutes**) and named locks via
+`infra/memory-cache.ts` and `infra/memory-lock.ts`. These are process-local — fine for demos and
+small single-process deployments; they are not shared across `CLUSTER_ENABLED` workers.
 
 ### Layering & dependency injection
 
