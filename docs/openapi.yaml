@@ -4,7 +4,8 @@ info:
   version: 0.1.0
   description: >
     Scaffold API surface. `health` is the canonical reference feature;
-    `echo` exists only to demonstrate the request-validation middleware.
+    `echo` demonstrates request-validation middleware; `demo` exercises
+    process-local in-memory cache and named locks (single-process only).
     Hand-written and kept in sync manually — see CONTRIBUTING.md.
 servers:
   - url: http://localhost:3000/api
@@ -65,7 +66,157 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+  /demo/cache/{key}:
+    parameters:
+      - $ref: "#/components/parameters/DemoCacheKey"
+    put:
+      summary: Set a process-local cache entry
+      description: >
+        Default TTL is 300000ms (5 minutes) when `ttlMs` is omitted.
+        Process-local only — not shared across cluster workers.
+      operationId: putDemoCache
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DemoCacheSetRequest"
+      responses:
+        "200":
+          description: Entry stored.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DemoCacheSuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    get:
+      summary: Read a process-local cache entry
+      operationId: getDemoCache
+      responses:
+        "200":
+          description: Entry found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DemoCacheSuccessResponse"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+    delete:
+      summary: Delete a process-local cache entry
+      operationId: deleteDemoCache
+      responses:
+        "204":
+          description: Entry deleted.
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /demo/locks/{name}/acquire:
+    post:
+      summary: Acquire a process-local named lock
+      description: >
+        Returns a `lockId` used to release. Optional `timeoutMs` waits for the
+        lock; on timeout responds 409. Process-local only.
+      operationId: postDemoLockAcquire
+      parameters:
+        - $ref: "#/components/parameters/DemoLockName"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DemoLockAcquireRequest"
+      responses:
+        "200":
+          description: Lock acquired.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DemoLockHeldSuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "409":
+          $ref: "#/components/responses/Conflict"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /demo/locks/{name}/release:
+    post:
+      summary: Release a process-local named lock by lockId
+      operationId: postDemoLockRelease
+      parameters:
+        - $ref: "#/components/parameters/DemoLockName"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DemoLockReleaseRequest"
+      responses:
+        "204":
+          description: Lock released.
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /demo/locks/{name}:
+    get:
+      summary: Check whether a named lock is held
+      operationId: getDemoLockStatus
+      parameters:
+        - $ref: "#/components/parameters/DemoLockName"
+      responses:
+        "200":
+          description: Current lock status.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DemoLockStatusSuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "429":
+          $ref: "#/components/responses/TooManyRequests"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
 components:
+  parameters:
+    DemoCacheKey:
+      name: key
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 256
+    DemoLockName:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+
   schemas:
     ErrorResponse:
       type: object
@@ -149,9 +300,107 @@ components:
         data:
           $ref: "#/components/schemas/EchoResponseBody"
 
+    DemoCacheSetRequest:
+      type: object
+      required: [value]
+      properties:
+        value: {}
+        ttlMs:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 86400000
+          description: Lifetime in milliseconds. Defaults to 300000 (5 minutes).
+
+    DemoCacheEntry:
+      type: object
+      required: [key, value, ttlMs]
+      properties:
+        key:
+          type: string
+        value: {}
+        ttlMs:
+          type: integer
+
+    DemoCacheSuccessResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          $ref: "#/components/schemas/DemoCacheEntry"
+
+    DemoLockAcquireRequest:
+      type: object
+      properties:
+        timeoutMs:
+          type: integer
+          exclusiveMinimum: 0
+          maximum: 60000
+
+    DemoLockReleaseRequest:
+      type: object
+      required: [lockId]
+      properties:
+        lockId:
+          type: string
+          format: uuid
+
+    DemoLockHeld:
+      type: object
+      required: [name, lockId]
+      properties:
+        name:
+          type: string
+        lockId:
+          type: string
+          format: uuid
+
+    DemoLockHeldSuccessResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          $ref: "#/components/schemas/DemoLockHeld"
+
+    DemoLockStatus:
+      type: object
+      required: [name, locked]
+      properties:
+        name:
+          type: string
+        locked:
+          type: boolean
+
+    DemoLockStatusSuccessResponse:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+        data:
+          $ref: "#/components/schemas/DemoLockStatus"
+
   responses:
     BadRequest:
       description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Conflict:
+      description: Lock could not be acquired before timeout.
       content:
         application/json:
           schema:

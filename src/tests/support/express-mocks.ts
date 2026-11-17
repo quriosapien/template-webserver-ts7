@@ -10,15 +10,17 @@ export function createMockRequest(overrides: Partial<Request> = {}): Request {
   } as Request;
 }
 
-/** Chainable status().json() like Express's real Response. */
+/** Chainable status().json() / status().send() like Express's real Response. */
 export function createMockResponse(): Response {
   const res = {
     status: vi.fn(),
     json: vi.fn(),
+    send: vi.fn(),
     setHeader: vi.fn(),
   };
   res.status.mockReturnValue(res);
   res.json.mockReturnValue(res);
+  res.send.mockReturnValue(res);
   res.setHeader.mockReturnValue(res);
   return res as unknown as Response;
 }

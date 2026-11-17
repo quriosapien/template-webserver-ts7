@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { buildContainer } from '@/container';
+import { DemoController } from '@/controllers/demo.controller';
 import { EchoController } from '@/controllers/echo.controller';
 import { HealthController } from '@/controllers/health.controller';
+import { MemoryCache } from '@/infra/memory-cache';
+import { MemoryLock } from '@/infra/memory-lock';
 
 describe('buildContainer', () => {
   it('builds all 5 datastore clients in the expected order', () => {
@@ -26,6 +29,14 @@ describe('buildContainer', () => {
     const container = buildContainer();
 
     expect(container.controllers.echo).toBeInstanceOf(EchoController);
+  });
+
+  it('wires the demo controller plus process-local cache and locks', () => {
+    const container = buildContainer();
+
+    expect(container.controllers.demo).toBeInstanceOf(DemoController);
+    expect(container.cache).toBeInstanceOf(MemoryCache);
+    expect(container.locks).toBeInstanceOf(MemoryLock);
   });
 
   it('exposes a logger', () => {
